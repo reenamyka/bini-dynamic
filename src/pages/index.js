@@ -28,20 +28,30 @@ import "aos/dist/aos.css";
 import { CLOUDFRONT_URL } from "@/data/data";
 import { theme } from "./_app";
 import Image from "next/image";
+import LivestreamSection from "@/components/sections/LivestreamSection";
+import ShopSection from "@/components/sections/ShopSection";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700", "900"],
 });
-const queries = [getHeroQueryAxios, getBiographyQueryAxios, getMusicQueryAxios, getVideosQueryAxios, getGalleryQueryAxios, getShopQueryAxios, getEventsQueryAxios];
+const queries = [
+  getHeroQueryAxios,
+  getBiographyQueryAxios,
+  getMusicQueryAxios,
+  getVideosQueryAxios,
+  getGalleryQueryAxios,
+  getShopQueryAxios,
+  getEventsQueryAxios,
+];
 export async function getServerSideProps() {
   let data = {};
   if (process.env.NEXT_PUBLIC_GQL_ENDPOINT != "") {
     for (const item of queries) {
       await axios({
-        url: process.env.NEXT_PUBLIC_GQL_ENDPOINT+item.queryid,
-          method: "get",
+        url: process.env.NEXT_PUBLIC_GQL_ENDPOINT + item.queryid,
+        method: "get",
         headers: {
-          "Authorization": "Basic " + process.env.NEXT_PUBLIC_GQL_AUTH
+          Authorization: "Basic " + process.env.NEXT_PUBLIC_GQL_AUTH,
         },
         data: {
           query: item.query,
@@ -58,7 +68,7 @@ export async function getServerSideProps() {
   }
   return { props: { data } };
 }
-export default function Home({ data }) {  
+export default function Home({ data }) {
   const isMobileView = useMediaQuery(theme.breakpoints.isMobileView);
   const backgroundImg = isMobileView ? "bg2-mobile.png" : "bg2.png";
   useEffect(() => {
@@ -112,11 +122,13 @@ export default function Home({ data }) {
           <Navbar />
           <HeroSection data={data.heroBanner} />
           <BiographySection data={data.biographySection} />
-          <MusicSection data={data.musicGallery}/>
-          <VideosSection data={data.videosSection}/>
-          <GallerySection data = {data.galleryBlock}/>
-          <MerchSection data = {data.shopSection}/>
-          <ScheduleSection data={data.eventsSection}/>
+          <MusicSection data={data.musicGallery} />
+          <VideosSection data={data.videosSection} />
+          <GallerySection data={data.galleryBlock} />
+          <LivestreamSection />
+          <MerchSection data={data.shopSection} />
+          <ShopSection data={data.shopSection} />
+          <ScheduleSection data={data.eventsSection} />
           {/* <ArticlesSection /> */}
           <Newsletter />
           <Footer />
